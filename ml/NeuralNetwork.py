@@ -1,7 +1,6 @@
 # __Author__: Hanseok Jo
 import numpy as np
 import random
-import math
 import ActivationFunctions as af
 
 
@@ -82,7 +81,7 @@ class NeuralNetwork(object):
                 hidden_layer.delta_vector = func(input_vector) * output_vector
 
         def update_matrix(layer):
-            layer.W = layer.W + learning_rate * np.dot(layer.delta_vector, layer.input_vector)
+            layer.W += learning_rate * np.dot(layer.delta_vector, layer.input_vector)
 
         for epoch in range(max_epoch):
             self.fnnpropagate()
