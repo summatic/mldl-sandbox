@@ -104,5 +104,3 @@ target_numbers = np.array([2, 1, 10])
 NN = NeuralNetwork(input_numbers, target_numbers)
 NN.fnnpropagate()
 NN.fnnbackpropagate(learning_rate=0.01)
-
-# Local Change
