@@ -70,20 +70,19 @@ phrased = n_gram(3, sentences)
 window_size = 5
 windowed = window(phrased, 'text', window_size)
 
-print(nb_words, window_size)
-
-one_hot_list = []
+X, y = [], []
 for i in windowed:
     one_hot = text.one_hot(i, n=nb_words, filters=trans())
-    one_hot_list.append(one_hot)
+    X.append(one_hot)
+    y.append(one_hot[int(window_size / 2) - 1])
+X, y = np.array(X), np.array(y)
+print(X.shape, y.shape)
 
 model = Sequential()
-model.add(Embedding(input_dim=nb_words, output_dim=15, input_length=window_size))
+model.add(Embedding(input_dim=nb_words, output_dim=1, input_length=window_size))
 
-input_array = np.random.randint(1000, size=(32, 10))
-input_array = np.array(one_hot_list)
+input_array = np.array(X)
 
 model.compile('rmsprop', 'mse')
-test = input_array[0]
-print(test)
-print(model.predict(test))
+
+model.fit(X, y)
