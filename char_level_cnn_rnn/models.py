@@ -23,7 +23,7 @@ class TextCNNRNN(object):
 
         # Placeholders for input, output and initial state of bi-lstm
         input_x = tf.placeholder(tf.int32, shape=[None, sequence_length], name='input_x')
-        input_y = tf.placeholder(tf.int32, shape=[None, num_classes], name='input_y')
+        input_y = tf.placeholder(tf.float32, shape=[None, num_classes], name='input_y')
         istate_fw = tf.placeholder("float", [None, 2 * hidden_size])
         istate_bw = tf.placeholder("float", [None, 2 * hidden_size])
 
@@ -124,17 +124,10 @@ class TextCNNRNN(object):
         # Calculate loss function
         with tf.name_scope('loss'):
             losses = tf.nn.softmax_cross_entropy_with_logits(scores, input_y)
-            loss = tf.reduce_mean(losses) + l2_reg_lambda * l2_loss / 2
+            self.loss = tf.reduce_mean(losses) + l2_reg_lambda * l2_loss / 2
 
         # Accuracy
         with tf.name_scope("accuracy"):
             correct_predictions = tf.equal(predictions, tf.argmax(input_y, 1))
-            accuracy = tf.reduce_mean(tf.cast(correct_predictions, "float"), name="accuracy")
-
-with tf.Graph().as_default():
-    sess = tf.Session()
-    with sess.as_default():
-        cnnrnn = TextCNNRNN(sequence_length=336, num_classes=2, vocab_size=111, embedding_size=8,
-                            num_filter=128, filter_lengths=[5, 3], pool_lengths=[2, 2],
-                            dropout=0.5, hidden_size=128, l2_reg_lambda=5*math.pow(10, -4))
+            self.accuracy = tf.reduce_mean(tf.cast(correct_predictions, "float"), name="accuracy")
 
